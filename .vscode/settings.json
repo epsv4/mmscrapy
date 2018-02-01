@@ -1,0 +1,14 @@
+{
+    // "python.pythonPath": "E:\\PycharmProjects\\mmscrapy",
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/.DS_Store": true,
+        "**/*.pyc": true
+    },
+    "python.autoComplete.extraPaths": [
+            "E:\\PycharmProjects\\mmscrapy"
+        ]
+        // "editor.fontFamily": "Fira Mono"
+}

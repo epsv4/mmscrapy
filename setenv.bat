@@ -1,0 +1,1 @@
+set PYTHONPATH=E:\PycharmProjects\mmscrapy
