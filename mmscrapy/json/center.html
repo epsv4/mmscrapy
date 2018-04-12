@@ -1,0 +1,110 @@
+<html>
+
+<head>
+    <style>
+        .item1,
+        .item3,
+        .item4,
+        .item5,
+        .item7,
+        .item9,
+        .item11,
+        .item13 {
+            width: 100px;
+            height: 100px;
+            border: 1px solid #63B8FF;
+            background: #C6E2FF;
+            position: absolute;
+        }
+
+        .item2,
+        .item6,
+        .item8 {
+            top: 100px;
+            left: 100px;
+            border: 1px solid #EE0000;
+            width: 200px;
+            height: 200px;
+            position: relative;
+        }
+
+        .item10 {
+            width: 80px;
+            height: 80px;
+            border: 1px solid #63B8FF;
+            background: #F8F8FF;
+            overflow: hidden;
+        }
+
+        .item12 {
+            width: 80px;
+            height: 80px;
+            border: 1px solid #63B8FF;
+            background: #D1EEEE;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .item1 {
+            top: 0;
+            left: 0;
+        }
+
+        .item4 {
+            z-index: 3;
+        }
+
+        .item5 {
+            margin-left: 40px;
+            z-index: 2;
+        }
+
+        .item6 {
+            margin-bottom: -100px;
+            z-index: 2;
+            background: #F8F8FF;
+        }
+
+        .item7 {
+            z-index: 1;
+        }
+
+        .item8 {
+            z-index: 3;
+            background: #D1EEEE;
+        }
+
+        .item9 {
+            z-index: 2;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <div class="item4">
+        我是absolute,z-index:3
+    </div>
+    <div class="item5">
+        我是absolute,z-index:2
+    </div> -->
+    <!-- <div class="item6">
+        我是relative,z-index:2
+        <div class="item7">
+            我是relative里面的absolute,z-index:3
+        </div>
+    </div> -->
+    <div class="item8">
+        我是relative,z-index:3
+        <div class="item9">
+            我是relative里面的absolute,z-index:2
+        </div>
+    </div>
+    <div class="item10">
+        我是普通div,overflow:hidden 
+        <div class="item11">
+            我是div里面的absolute
+        </div>
+    </div>
+</body>
+
+</html>

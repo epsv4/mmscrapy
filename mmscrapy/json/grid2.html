@@ -1,0 +1,38 @@
+<html>
+
+<head>
+    <style>
+        .item-a {
+            grid-area: header;
+        }
+
+        .item-b {
+            grid-area: main;
+        }
+
+        .item-c {
+            grid-area: sidebar;
+        }
+
+        .item-d {
+            grid-area: footer;
+        }
+
+        .container {
+            grid-template-columns: 50px 50px 50px 50px;
+            grid-template-rows: auto;
+            grid-template-areas: "header header header header" 
+            "main main . sidebar" 
+            "footer footer footer footer";
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="item-b">1y</div>
+    </div>
+
+</body>
+
+</html>
