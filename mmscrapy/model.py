@@ -24,6 +24,10 @@ def initDb():
     DBSession = sessionmaker(bind=engine)
     BASE.metadata.create_all(engine)
 
+class Simple(BASE):
+    __tablename__ = 'simple'
+    id = Column(Integer, primary_key=True)
+
 
 class ImageList(BASE):
     __tablename__ = 't_imagelists'
@@ -33,10 +37,11 @@ class ImageList(BASE):
     name = Column(String(200))
     description = Column(String(200))
     url = Column(String(200))
-    createdt = Column(DateTime)
-    modifydt = Column(DateTime)
+    created_at = Column(DateTime, )
+    updated_at = Column(DateTime)
     status = Column(CHAR(4))
     json = Column(VARCHAR(10000))
+    favourite = Column(VARCHAR(100))
 
     __table_args__ = (
         UniqueConstraint('url', name='uix_url'),  # 鑱斿悎鍞竴绱㈠紩
@@ -46,6 +51,20 @@ class ImageList(BASE):
 
     def __repr__(self):
         return "<ImageList(id='%d', name='%s')>" % (self.id, self.name)
+
+class News(BASE):
+    __tablename__ = 'news'
+
+    id = Column(Integer, primary_key=True)
+    url = Column(String(200))
+    title = Column(String(200))
+    content = Column(String(10000))
+    created_at = Column(DateTime, )
+    updated_at = Column(DateTime)
+
+
+    def __repr__(self):
+        return "<News(id='%d', title='%s')>" % (self.id, self.title)
 
 
 class ImageInfo(BASE):
@@ -69,4 +88,4 @@ class ImageInfo(BASE):
     def __repr__(self):
         return "<ImageList(id='%d', name='%s')>" % (self.id, self.name)
 
-__all__ = ["getSession", "initDb", "ImageList"]
+__all__ = ["getSession", "initDb", "ImageList", "Simple"]

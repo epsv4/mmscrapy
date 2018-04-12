@@ -28,7 +28,7 @@ class MmscrapyPipeline(object):
             names = item["names"]
             now = datetime.datetime.now()
             logging.debug("urls=%s", str(urls))
-            ms = [ImageList(kind=1, name=names[i], url=urls[i], createdt=now, modifydt=now)
+            ms = [ImageList(kind=1, name=names[i], url=urls[i], createdt=now, modifydt=now, favourite='0' * 100)
                 for i in range(count)]
             for m in ms:
                 try:

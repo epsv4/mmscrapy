@@ -5,6 +5,8 @@ import scrapy
 import pybloom_live
 import atexit
 import sys
+import re
+import json
 import datetime
 from ..init import init
 from scrapy.http import Request, Response
@@ -13,9 +15,10 @@ from ..items import PageListItem, ImageListItem
 from scrapy.spiders import CrawlSpider
 
 init()
-
+NUMBER_PATTERN = re.compile('.*?(\d+)')
 # a = Response()
 # a.meta
+
 
 class MM131Spider(CrawlSpider):
     name = "mm131"
@@ -25,55 +28,53 @@ class MM131Spider(CrawlSpider):
     ]
 
     def start_requests(self):
-        session  = getSession()
-        if 1:
-            for page in range(1, 2):
-                yield Request(url='http://m.mm131.com/more.php?page=%d' % page, 
-                callback=self.parseList)
+        session = getSession()
+        if 0:
+            for page in range(2664, 2665):
+                yield Request(url='http://m.mm131.com/more.php?page=%d' % page,
+                              callback=self.parseList)
+        elif 1:
+            for page in range(2000, 5000):
+                yield Request(url='http://www.mm131.com/xinggan/%d.html' % page,
+                              callback=self.parseListI)
         else:
             for il in session.query(ImageList).filter(ImageList.id >= 94):
                 yield Request(url=il.url, meta={"father_url": il.url}, callback=self.parseListI)
                 # break
 
-    def parseList(self, response):
-        selectors = response.xpath('//article/div')
-        urls = []
-        names = []
-        item = PageListItem()
+    def parseList(self, response: scrapy.http.response.html.HtmlResponse):
+        pass
+
+    def parseListI(self, response: scrapy.http.response.html.HtmlResponse):
+        print('$$$$$$$$$${}'.format(response.url))
+        title = response.xpath(
+            '//div[@class="content"]/h5').xpath('text()')[0].extract()
+        selectors = response.xpath('//span[@class="page-ch"]')
         n = 0
         for sel in selectors:
-            logging.debug("xxxxxxxxxxxxxxxxxx")
-            logging.debug(sel)
-            a = sel.xpath('h2/a')
-            href, name = a.xpath('@href').extract()[0], \
-                a.xpath('text()').extract()[0]
-            urls.append(href)
-            names.append(name)
-        item["urls"] = urls
-        item["names"] = names
-        item["count"] = len(urls)
-        item["kind"] = 2
-        yield item
-
-    def parseListI(self, response : Response):
-        # response.meta
-        logging.debug("meta=======================" + str(response.meta))
-        figure = response.xpath('//div[@class="place-padding"]/figure')
-        urls = figure.xpath('//img[contains(@src, ".jpg")]/@src').extract()
-        imageListItem = ImageListItem()
-        imageListItem["count"] = len(urls)
-        imageListItem["father_url"] = response.meta["father_url"]
-        imageListItem["urls"] = urls
-        yield imageListItem
+            text = sel.xpath('text()')[0].extract()
+            if text.find('共') >= 0:
+                n = int(re.match(NUMBER_PATTERN, text).group(1))
+        if n == 0:
+            return
+        session: sqlalchemy.orm.session.Session = getSession()
+        now = datetime.datetime.now()
+        url = response.url
+        uid = re.search(NUMBER_PATTERN, url[url.rfind('/'):]).group(1)
         try:
-            nextPageUrl = response.xpath(
-                '//a[text()="下一页"]/@href').extract()[0]
-        except IndexError:
+            imageList: ImageList = session.query(ImageList).filter(
+                ImageList.url == response.url).one()
+            logging.info('--------------------')
+            logging.info(imageList.url)
+            session.delete(imageList)
+        except Exception as e:
             pass
-        else:
-            logging.debug("开始获取下一页============" + nextPageUrl)
-            yield Request(url=nextPageUrl, meta=response.meta,
-                          callback=self.parseListI, dont_filter=True)
+        session.add(ImageList(kind=2, name=title,
+                              url=response.url, created_at=now, updated_at=now, json=json.dumps({
+                                  "urls": ["http://img1.mm131.me/pic/%s/%d.jpg" % (uid, i) for i in range(n)]
+                              }
+                              )))
+        session.commit()
 
 
 if __name__ == "__main__":
