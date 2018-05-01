@@ -1,0 +1,6 @@
+sqlalchemy
+pymysql
+pybloom_live
+pymysql
+requests
+bs4

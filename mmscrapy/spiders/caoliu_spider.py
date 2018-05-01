@@ -23,16 +23,17 @@ NUMBER_PATTERN = re.compile('.*?(\d+)')
 # a = Response()
 # a.meta
 
-BASE_URL = "http://www.cityuu.com"
+BASE_URL = "http://cl.v4tg.pw"
 
 
 class CaoliuSpider(CrawlSpider):
     name = "caoliu"
-    allowed_domains = ["http://www.cityuu.com"]
+    allowed_domains = [BASE_URL]
     start_urls = [
         "http://m.mm131.com/more.php?page=1"
     ]
-    maxNPage = 3
+    maxNPage = 100
+    currentPage = 0
 
     def start_requests(self):
         session = getSession()
@@ -66,6 +67,9 @@ class CaoliuSpider(CrawlSpider):
             session.commit()
 
     def parseListI(self, response: scrapy.http.response.html.HtmlResponse):
+        if self.currentPage == self.maxNPage:
+            return
+        self.currentPage += 1
         ax = response.css('#ajaxtable > tbody > tr  > td.tal > h3 > a')
         session: sqlalchemy.orm.session.Session = getSession()
         now = datetime.datetime.now()
@@ -85,7 +89,6 @@ class CaoliuSpider(CrawlSpider):
                         continue
                     yield Request(url, callback=self.parseListII,
                                   dont_filter=True, priority=1)
-                    print('download %s' % url)
                 except NoResultFound as e:
                     logging.info('no result found')
                     session.add(ImageList(kind=4, name=title, url=url,
@@ -93,7 +96,6 @@ class CaoliuSpider(CrawlSpider):
                     session.commit()
                     yield Request(url, callback=self.parseListII,
                                   dont_filter=True, priority=1)
-                    print('download %s' % url)
             except Exception as e:
                 logging.error(format_exc())
                 continue
