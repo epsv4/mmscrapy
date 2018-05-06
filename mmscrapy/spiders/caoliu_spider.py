@@ -91,7 +91,7 @@ class CaoliuSpider(CrawlSpider):
                                   dont_filter=True, priority=1)
                 except NoResultFound as e:
                     logging.info('no result found')
-                    session.add(ImageList(kind=4, name=title, url=url,
+                    session.add(ImageList(kind=4, name=title, url=url, favourite='0'*100,
                                           created_at=now, updated_at=now, json='{}'))
                     session.commit()
                     yield Request(url, callback=self.parseListII,
