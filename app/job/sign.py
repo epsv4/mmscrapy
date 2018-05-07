@@ -4,6 +4,7 @@ import json
 import logging
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from aiohttp import web
+import pidfile
 
 # logging.FileHandler('timer.log')
 logging.basicConfig(level=logging.DEBUG,
@@ -61,7 +62,8 @@ async def fetch():
 if __name__ == '__main__':
     # loop: asyncio.windows_events._WindowsSelectorEventLoop = asyncio.get_event_loop()
     # loop.run_until_complete(fetch())
-    if False:
+    if True:
+        pidfile.daemonize('/var/run/timerpy.pid')
         scheduler = AsyncIOScheduler()
         scheduler.add_job(fetch, 'interval', minutes=3, id='fetch')
         scheduler.start()
