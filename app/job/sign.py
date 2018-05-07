@@ -6,8 +6,9 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from aiohttp import web
 
 # logging.FileHandler('timer.log')
-logging.basicConfig(level=logging.DEBUG, 
-    format='%(filename)20s%(lineno)04d[%(message)s]', filename='timer.log')
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(filename)20s-%(lineno)04d:[%(message)s]', filename='timer.log')
+
 
 def foo():
     print('foo')
@@ -40,10 +41,19 @@ def mgqr_login():
 
 async def fetch():
     session: aiohttp.client.ClientSession = None
-    data = 'UserName={}&UserPwd={}&remember=1'.format('nxlqhmr', '111aaa')
+    data = 'UserName={}&UserPwd={}&remember=1'.format(
+        '1392798578@qq.com', '111aaa')
+    headers = {'content-type': 'image/gif',
+               'Cookie': 'email=1392798578@qq.com',
+               'DNT': '1',
+               'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+               'Origin': 'http://www.mgqr.com',
+               'Referer': 'http://www.mgqr.com',
+               'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36 Avast/65.0.411.162'}
+
     async with aiohttp.ClientSession() as session:
         async with session.post('http://www.mgqr.com/control/checklogin.ashx',
-                                data=data.encode('latin-1')) as resposne:
+                                data=data.encode('gbk'), headers=headers) as resposne:
             text = await resposne.text()
             jsnRsp = json.loads(text)
             logging.debug(text)
@@ -51,8 +61,11 @@ async def fetch():
 if __name__ == '__main__':
     # loop: asyncio.windows_events._WindowsSelectorEventLoop = asyncio.get_event_loop()
     # loop.run_until_complete(fetch())
-    if True:
+    if False:
         scheduler = AsyncIOScheduler()
         scheduler.add_job(fetch, 'interval', minutes=3, id='fetch')
         scheduler.start()
         asyncio.get_event_loop().run_forever()
+    else:
+        loop: asyncio.windows_events._WindowsSelectorEventLoop = asyncio.get_event_loop()
+        loop.run_until_complete(fetch())
