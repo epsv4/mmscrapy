@@ -36,6 +36,9 @@ def daemonize(pid_file=None):
     logging.debug('before fork ii')
     # 注意了，这里是第2次fork，也就是子进程的子进程，我们把它叫为孙子进程
     _pid = os.fork()
+    if _pid < 0:
+        logging.error('fork ii failed')
+        return
     if _pid:
         # 退出子进程
         sys.exit(0)
