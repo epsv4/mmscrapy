@@ -64,6 +64,7 @@ if __name__ == '__main__':
     # loop.run_until_complete(fetch())
     if True:
         pidfile.daemonize('/var/run/timerpy.pid')
+        logging.info('why')
         scheduler = AsyncIOScheduler()
         scheduler.add_job(fetch, 'interval', minutes=3, id='fetch')
         scheduler.start()
