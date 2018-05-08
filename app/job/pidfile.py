@@ -42,6 +42,7 @@ def daemonize(pid_file=None):
     if _pid:
         # 退出子进程
         sys.exit(0)
+    logging.info('孙子进程')
     # 此时，孙子进程已经是守护进程了，接下来重定向标准输入、输出、错误的描述符(是重定向而不是关闭, 这样可以避免程序在 print 的时候出错)
     # 刷新缓冲区先，小心使得万年船
     sys.stdout.flush()
