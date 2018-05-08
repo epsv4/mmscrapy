@@ -1,6 +1,11 @@
 import os
 import sys
 import atexit
+import signal
+
+
+def exit():
+    sys.exit(0)
 
 
 def daemonize(pid_file=None):
@@ -9,6 +14,9 @@ def daemonize(pid_file=None):
     :param pid_file: 保存进程id的文件
     :return:
     """
+    # signal.signal(signal.SIGUSR1, exit)
+    if pid_file != None and os.path.exists(pid_file):
+        raise Exception('Process is running')
     # 从父进程fork一个子进程出来
     pid = os.fork()
     # 子进程的pid一定为0，父进程大于0
