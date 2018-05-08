@@ -26,13 +26,14 @@ def daemonize(pid_file=None):
     elif pid:
         # 退出父进程，sys.exit()方法比os._exit()方法会多执行一些刷新缓冲工作
         sys.exit(0)
+    logging.debug('before chdir')
     # 子进程默认继承父进程的工作目录，最好是变更到根目录，否则回影响文件系统的卸载
     os.chdir('/')
     # 子进程默认继承父进程的umask（文件权限掩码），重设为0（完全控制），以免影响程序读写文件
     os.umask(0)
     # 让子进程成为新的会话组长和进程组长
     os.setsid()
-
+    logging.debug('before fork ii')
     # 注意了，这里是第2次fork，也就是子进程的子进程，我们把它叫为孙子进程
     _pid = os.fork()
     if _pid:
