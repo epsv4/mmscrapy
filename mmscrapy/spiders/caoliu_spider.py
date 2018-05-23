@@ -56,7 +56,7 @@ class CaoliuSpider(CrawlSpider):
             urls = jsnObj.get('urls', [])
             if len(urls) != 0:
                 return
-            imgs = [i.xpath('@src')[0].extract()
+            imgs = [i.xpath('@data-link')[0].extract()
                     for i in response.css('div.tpc_content input')]
             urlsSet = set(urls)
             for img in imgs:
