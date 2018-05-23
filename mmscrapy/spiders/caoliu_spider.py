@@ -89,7 +89,7 @@ class CaoliuSpider(CrawlSpider):
                     imageList: ImageList = session.query(ImageList).filter(
                         ImageList.url == url).one()
                     jsnObj = json.loads(imageList.json)
-                    if 'urls' in jsonObj and len(jsnObj["urls"]) != 0:
+                    if 'urls' in jsnObj and len(jsnObj["urls"]) != 0:
                         continue
                     yield Request(url, callback=self.parseListII,
                                   dont_filter=True, priority=1)
